@@ -1,34 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { RECEIVERACTIONS } from '../reducers/receivers';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 
 import 'antd/dist/antd.css';
 import { Divider, List, Modal, Input } from 'antd';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { RECEIVERACTIONS } from '../reducers/receivers';
 import AppLayout from '../components/AppLayout';
 import { Button } from '../util/common_styles';
 
-const receiver_page = () => {
+const ReceiverPage = () => {
 	const dispatch = useDispatch();
-	const router = useRouter();
-	const { logInState } = useSelector((state) => state.user);
+	const { logInState } = useSelector(state => state.user);
 
 	/*
-        리스트 등록하기와 각 리스트 별 정보수정 버튼을 눌렀을 때
-        submit에 따른 API 통신을 분기해주기 위함
-    */
+		리스트 등록하기와 각 리스트 별 정보수정 버튼을 눌렀을 때
+		submit에 따른 API 통신을 분기해주기 위함
+	*/
 	const [modalSubmitMode, setModalSubmitMode] = useState(null);
 
 	const { familyList, friendList, relativeList, acquaintanceList } =
-		useSelector((state) => state.receivers);
+		useSelector(state => state.receivers);
 	const [registFormVisible, setRegistFormVisible] = useState(false);
-	// const [relationValue, setRelationValue] = useState('');
 
-	
 	const [InputValues, setInputValues] = useState({
 		name: '',
 		email: '',
@@ -51,9 +48,9 @@ const receiver_page = () => {
 		setRegistFormVisible(false);
 	};
 
-	const handleSelect = (e) => {
+	const handleSelect = e => {
 		const selection = e.target.value;
-		setInputValues((prev) => {
+		setInputValues(prev => {
 			if (selection === 'typing') {
 				inputEl.current.focus();
 				return {
@@ -68,13 +65,11 @@ const receiver_page = () => {
 		});
 	};
 
-	const handleInputValues = (e) => {
-		setInputValues((prev) => {
-			return {
-				...prev,
-				[e.target.name]: e.target.value,
-			};
-		});
+	const handleInputValues = e => {
+		setInputValues((prev) => ({
+			...prev,
+			[e.target.name]: e.target.value,
+		}));
 	};
 
 	// 리스트 불러오기
@@ -87,13 +82,13 @@ const receiver_page = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(res => {
 				dispatch(RECEIVERACTIONS.getReceivers({ lists: res.data }));
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
-	const onSubmitRegistForm = (e) => {
+	const onSubmitRegistForm = e => {
 		e.preventDefault();
 		if (modalSubmitMode === 'registerInfo') {
 			registerReciver(e);
@@ -103,7 +98,7 @@ const receiver_page = () => {
 	};
 
 	// 리스트 수정하기
-	const changeReciver = (e) => {
+	const changeReciver = () => {
 		const token = sessionStorage.getItem('token');
 		const userId = sessionStorage.getItem('userId');
 		const { name, email, relation, receiverId } = InputValues;
@@ -114,7 +109,7 @@ const receiver_page = () => {
 					fullName: name,
 					emailAddress: email,
 					userId,
-					relation: relation,
+					relation,
 					role: 'user',
 				},
 				{
@@ -123,16 +118,16 @@ const receiver_page = () => {
 					},
 				},
 			)
-			.then((res) => {
+			.then(() => {
 				alert('변경되었습니다!');
 				getReceiverList();
 				setRegistFormVisible(false);
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
 	// 리스트 등록하기
-	const registerReciver = (e) => {
+	const registerReciver = e => {
 		const token = sessionStorage.getItem('token');
 		const userId = sessionStorage.getItem('userId');
 		const submitData = new FormData(e.target);
@@ -141,7 +136,7 @@ const receiver_page = () => {
 		const relation = submitData.get('relation');
 		axios
 			.post(
-				`/api/auth/${userId}/receiver`,
+				`/api/auth/${userId}/receivers`,
 				{
 					fullName,
 					emailAddress,
@@ -155,16 +150,16 @@ const receiver_page = () => {
 					},
 				},
 			)
-			.then((res) => {
+			.then(() => {
 				alert('등록되었습니다!');
 				getReceiverList();
 				setRegistFormVisible(false);
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
 	// 리스트 삭제하기
-	const deleteReciver = (id) => {
+	const deleteReciver = id => {
 		const token = sessionStorage.getItem('token');
 		const userId = sessionStorage.getItem('userId');
 		axios
@@ -173,10 +168,10 @@ const receiver_page = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(() => {
 				getReceiverList();
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
 	const handleRegisterInfo = () => {
@@ -192,21 +187,19 @@ const receiver_page = () => {
 		setModalSubmitMode('registerInfo');
 	};
 
-	const handleChangeInfo = (item) => {
+	const handleChangeInfo = item => {
 		setRegistFormVisible(true);
 		setModalSubmitMode('changeInfo');
-		setInputValues(() => {
-			return {
-				name: item.name,
-				email: item.emailAddress,
-				relation: item.relation,
-				receiverId: item.receiverId,
-			};
-		});
+		setInputValues(() => ({
+			name: item.name,
+			email: item.emailAddress,
+			relation: item.relation,
+			receiverId: item.receiverId,
+		}));
 	};
 
-	const handleDeleteInfo = (item) => {
-		const check = confirm(`정말로 ${item.name}을 삭제하시겠습니까?`);
+	const handleDeleteInfo = item => {
+		const check = window.confirm(`정말로 ${item.name}을 삭제하시겠습니까?`);
 		if (!check) return;
 		deleteReciver(item.receiverId);
 	};
@@ -220,9 +213,10 @@ const receiver_page = () => {
 			</ButtonWrapper>
 			{registFormVisible && (
 				<Modal
-					title="registerForm"
+					title="리스트 등록하기"
 					visible={registFormVisible}
 					onCancel={handleCancel}
+					width={300}
 					footer={[
 						<Button
 							form="registerForm"
@@ -238,32 +232,38 @@ const receiver_page = () => {
 				>
 					<form id="registerForm" onSubmit={onSubmitRegistForm}>
 						<div>
-							<label htmlFor="name">
-								이름:
+							<label htmlFor="name" style={{ display: 'flex' }}>
+								<span style={{ width: '5em' }}>이름:</span>
 								<Input
 									name="name"
 									onChange={handleInputValues}
 									value={InputValues.name}
+									style={{ marginLeft: '1em' }}
 								/>
 							</label>
 						</div>
 						<div>
-							<label htmlFor="email">
-								이메일:
+							<label htmlFor="email" style={{ display: 'flex' }}>
+								<span style={{ width: '5em' }}>이메일:</span>
 								<Input
 									name="email"
 									onChange={handleInputValues}
 									value={InputValues.email}
+									style={{ marginLeft: '1em' }}
 								/>
 							</label>
 						</div>
 						<div>
-							<label htmlFor="relation">
-								관계:
-								<select onChange={(e) => handleSelect(e)}>
-									<option value="">
-										--관계를 선택하세요--
-									</option>
+							<label
+								htmlFor="relation"
+								style={{ display: 'flex' }}
+							>
+								<span style={{ width: '5em' }}>관계:</span>
+								<select
+									onChange={e => handleSelect(e)}
+									style={{ marginLeft: '1em', width: '8em' }}
+								>
+									<option value="">--관계 선택--</option>
 									<option value="가족">가족</option>
 									<option value="친척">친척</option>
 									<option value="친구">친구</option>
@@ -275,6 +275,10 @@ const receiver_page = () => {
 									ref={inputEl}
 									onChange={handleInputValues}
 									value={InputValues.relation}
+									style={{
+										marginLeft: '0.5em',
+										width: '6.5em',
+									}}
 								/>
 							</label>
 						</div>
@@ -286,7 +290,7 @@ const receiver_page = () => {
 				bordered
 				dataSource={familyList}
 				css={listStyle}
-				renderItem={(item) => (
+				renderItem={item => (
 					<List.Item css={listItemStyle}>
 						<span>이름: {item.name}</span>
 						<span>이메일: {item.emailAddress}</span>
@@ -306,7 +310,7 @@ const receiver_page = () => {
 				bordered
 				dataSource={relativeList}
 				css={listStyle}
-				renderItem={(item) => (
+				renderItem={item => (
 					<List.Item css={listItemStyle}>
 						<span>이름: {item.name}</span>
 						<span>이메일: {item.emailAddress}</span>
@@ -326,7 +330,7 @@ const receiver_page = () => {
 				bordered
 				dataSource={friendList}
 				css={listStyle}
-				renderItem={(item) => (
+				renderItem={item => (
 					<List.Item css={listItemStyle}>
 						<span>이름: {item.name}</span>
 						<span>이메일: {item.emailAddress}</span>
@@ -346,7 +350,7 @@ const receiver_page = () => {
 				bordered
 				dataSource={acquaintanceList}
 				css={listStyle}
-				renderItem={(item) => (
+				renderItem={item => (
 					<List.Item css={listItemStyle}>
 						<span>이름: {item.name}</span>
 						<span>이메일: {item.emailAddress}</span>
@@ -365,7 +369,7 @@ const receiver_page = () => {
 	);
 };
 
-export default receiver_page;
+export default ReceiverPage;
 
 const listStyle = css`
 	width: 80%;
@@ -394,7 +398,7 @@ const ButtonWrapper = styled.div`
 	height: 70px;
 	& > button {
 		position: absolute;
-		right: 85px;
+		right: 10em;
 		bottom: 0;
 	}
 `;

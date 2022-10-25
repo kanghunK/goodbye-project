@@ -5,7 +5,7 @@ export const initialState = {
 	userId: '',
 	token: '',
 	dateOfBirth: '',
-	logInState: null
+	logInState: null,
 };
 
 const userSlice = createSlice({
@@ -19,10 +19,10 @@ const userSlice = createSlice({
 			state.logInState = action.payload.logInState;
 		},
 		clearUserData(state) {
-			state.fullName = '',
-			state.userId = '',
-			state.token = '',
-			state.logInState = false
+			(state.fullName = ''),
+				(state.userId = ''),
+				(state.token = ''),
+				(state.logInState = false);
 		},
 		setFullName(state, action) {
 			state.fullName = action.payload;

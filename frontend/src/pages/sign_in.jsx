@@ -1,25 +1,21 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { Form } from 'antd';
 import { css } from '@emotion/react';
+import axios from 'axios';
+import Router, { useRouter } from 'next/router';
 import useInput from '../hooks/useInput';
 import AppLayout from '../components/AppLayout';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { USERACTIONS } from '../reducers/user';
-import Router, { useRouter } from 'next/router';
 
 import userLoginCheck from '../util/userLoginCheck';
 
 const SignIn = () => {
 	const router = useRouter();
 	const [redirectUrl, setRedirectUrl] = useState('/');
-	const dispatch = useDispatch();
 	const [email, onChangeEmail] = useInput('');
 	const [password, onChangePassword] = useInput('');
 
 	const preventUserAccess = async () => {
 		const isLogIn = await userLoginCheck();
-		//console.log(isLogIn);
 		if (isLogIn) {
 			alert('이미 로그인 되어있습니다..');
 			Router.replace('/');
@@ -30,7 +26,7 @@ const SignIn = () => {
 		const data = { email, password };
 		axios
 			.post('/api/users/login', data)
-			.then((res) => {
+			.then(res => {
 				if (res.data.token) {
 					sessionStorage.setItem('token', res.data.token);
 					sessionStorage.setItem('userId', res.data.userId);
@@ -43,7 +39,7 @@ const SignIn = () => {
 					Router.replace(redirectUrl);
 				}
 			})
-			.catch((error) => {
+			.catch(error => {
 				console.log(error);
 				if (error.response.data.reason) {
 					alert(error.response.data.reason);
@@ -59,7 +55,6 @@ const SignIn = () => {
 		if (router.query.redirectUrl) {
 			setRedirectUrl(router.query.redirectUrl);
 		}
-		//console.log('query : ' + redirectUrl);
 	}, [router.isReady]);
 
 	return (
@@ -132,11 +127,11 @@ const inputWrapper = css`
     }
 `;
 
-const forgetWrapper = css`
-	text-align: right;
-	color: #91aa9d;
-	margin: 10px 0px 50px;
-`;
+// const forgetWrapper = css`
+// 	text-align: right;
+// 	color: #91aa9d;
+// 	margin: 10px 0px 50px;
+// `;
 
 const buttonWrapper = css`
 	width: 100%;

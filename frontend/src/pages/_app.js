@@ -1,12 +1,16 @@
-import React from 'react';
-import Router from "next/router";
+/* eslint-disable no-unused-vars */
+import React, { useEffect } from 'react';
+import Router from 'next/router';
 import Head from 'next/head';
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+import PropTypes from 'prop-types';
+
 import wrapper from '../store/configureStore';
 
-function MyApp({ Component }) {
-	React.useEffect(() => {
+
+const MyApp = ({ Component }) => {
+	useEffect(() => {
 		const start = () => {
 			NProgress.start();
 		};
@@ -14,25 +18,23 @@ function MyApp({ Component }) {
 			NProgress.done();
 		};
 
-		Router.events.on("routeChangeStart", start);
-		Router.events.on("routeChangeComplete", end);
-		Router.events.on("routeChangeError", end);
+		Router.events.on('routeChangeStart', start);
+		Router.events.on('routeChangeComplete', end);
+		Router.events.on('routeChangeError', end);
 
 		return () => {
-			Router.events.off("routeChangeStart", start);
-			Router.events.off("routeChangeComplete", end);
-			Router.events.off("routeChangeError", end);
+			Router.events.off('routeChangeStart', start);
+			Router.events.off('routeChangeComplete', end);
+			Router.events.off('routeChangeError', end);
 		};
 	}, []);
+
 	return (
 		<>
 			<React.Suspense fallback={<>loading</>}>
 				<Head>
 					<meta charSet="utf-8" />
 					<link rel="shortcut icon" href="#" />
-					<style>
-					@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
-					</style>
 					<title>GoodBye</title>
 				</Head>
 				<Component />
@@ -41,6 +43,8 @@ function MyApp({ Component }) {
 	);
 }
 
-
+MyApp.propTypes = {
+	Component: PropTypes.node.isRequired
+}
 
 export default wrapper.withRedux(MyApp);

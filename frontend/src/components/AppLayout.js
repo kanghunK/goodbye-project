@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import 'antd/dist/antd.css';
+import PropTypes from 'prop-types';
+
 import Footer from './Footer';
 import Header from './Header';
 import useMousePosition from './UseMousePosition';
 
 const AppLayout = ({ children }) => {
 	const [ref, left, top] = useMousePosition();
-
-	useEffect(() => {
-		//console.log(left);
-	}, [left, top]);
 
 	return (
 		<Wrapper ref={ref}>
@@ -22,6 +20,10 @@ const AppLayout = ({ children }) => {
 	);
 };
 
+AppLayout.propTypes = {
+	children: PropTypes.node.isRequired,
+}
+
 export default AppLayout;
 
 const Wrapper = styled.div`
@@ -30,14 +32,14 @@ const Wrapper = styled.div`
 	position: relative;
 	padding-bottom: 200px;
 	font-family: 'Noto Sans KR', sans-serif;
-	background-image: radial-gradient(circle at 50% 50%, #f2f2f2, #fff);
+	background-color: #fff;
 `;
 
 const Cursor = styled.div`
 	z-index: -1;
 	position: absolute;
-	top: ${(props) => props.top}px;
-	left: ${(props) => props.left}px;
+	top: ${props => props.top}px;
+	left: ${props => props.left}px;
 	width: 150px;
 	height: 150px;
 	border-radius: 75em;
