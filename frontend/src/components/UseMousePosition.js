@@ -10,19 +10,16 @@ const useMousePosition = () => {
 	const [top, setTop] = useState(0);
 
 	const handleMouseMove = useCallback(
-		(e) => (
-			// setMousePosition({
-			// 	left: e.pageX,
-			// 	top: e.pageY,
-			// }),
-			setLeft(e.pageX), setTop(e.pageY)
-		),
+		e => {
+			setLeft(e.pageX);
+			setTop(e.pageY);
+		}, []
 	);
 
 	const ref = useRef();
 
 	const callbackRef = useCallback(
-		(node) => {
+		node => {
 			if (ref.current) {
 				ref.current.removeEventListener('mousemove', handleMouseMove);
 			}

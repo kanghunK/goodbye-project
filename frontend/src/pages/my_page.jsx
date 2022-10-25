@@ -1,33 +1,34 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-use-before-define */
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { css } from '@emotion/react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { TbRectangleVertical } from 'react-icons/tb';
-import { Form, Switch, Modal, Button, Input, DatePicker } from 'antd';
+import { Form, Modal, Button, Input, DatePicker } from 'antd';
 import styled from '@emotion/styled';
 import 'antd/dist/antd.css';
-const { confirm } = Modal;
 
-import { AppLayout } from '../components';
-import useInput from '../hooks/useInput';
-import Image from 'next/image';
 import axios from 'axios';
 import Router from 'next/router';
+import useInput from '../hooks/useInput';
+import AppLayout from '../components/AppLayout';
+
+const { confirm } = Modal;
 
 let dateDeathString = '2022-01-01';
 const MyPage = () => {
 	const birthRef = useRef();
-	const { logInState } = useSelector((state) => state.user);
+	const { logInState } = useSelector(state => state.user);
 
 	const [fullName, onChangeFullName, setFullName] = useInput('');
 	const [dateOfBirth, setDateOfBirth] = useState('2022-01-01');
 	const [password, onChangePassword, setPassword] = useInput('');
 	const [currentPassword, onChangeCurrentPassword, setCurrentPassword] =
 		useInput('');
-	const [email, onChangeEmail, setEmail] = useInput('');
-	const [confirmPassword, onChangeConfirmPassword, setConfirmPassword] =
-		useInput('');
+	const [email, onChangeEmail] = useInput('');
+	const [confirmPassword, onChangeConfirmPassword] = useInput('');
 	const [trustedUser, setTrustedUser] = useState('');
 	const [managedUsers, setManagedUsers] = useState([]);
 	const [imageSrc, setImageSrc] = useState('');
@@ -47,7 +48,7 @@ const MyPage = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(res => {
 				if (res.data.user.trustedUser) {
 					setTrustedUser(res.data.user.trustedUser.email);
 				}
@@ -55,7 +56,7 @@ const MyPage = () => {
 					setManagedUsers(res.data.user.managedUsers);
 				}
 			})
-			.catch((err) => console.log(err.response.data.reason));
+			.catch(err => console.log(err.response.data.reason));
 
 		axios
 			.get(`/api/auth/${userId}/remembrances`, {
@@ -63,46 +64,42 @@ const MyPage = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
-				const photo = res.data.photo;
+			.then(res => {
+				const { photo } = res.data;
 				if (!(typeof photo === 'undefined' || photo === '')) {
 					setImageSrc(res.data.photo);
 				}
 			})
-			.catch((err) => console.log(err.response.data.reason));
+			.catch(err => console.log(err.response.data.reason));
 	}, [logInState]);
 
-	//회원 정보 수정
+	// 회원 정보 수정
 	const onUpdateUser = useCallback(async () => {
 		const userId = sessionStorage.getItem('userId');
 		const token = sessionStorage.getItem('token');
-		const data = {fullName, dateOfBirth, currentPassword, password};
-		//const result = data.filter(item => item !== '')
+		const data = { fullName, dateOfBirth, currentPassword, password };
+		// const result = data.filter(item => item !== '')
 
 		await axios
-			.patch(
-				`/api/auth/${userId}`,
-				data,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
+			.patch(`/api/auth/${userId}`, data, {
+				headers: {
+					Authorization: `Bearer ${token}`,
 				},
-			)
-			.then((res) => {
+			})
+			.then(res => {
 				console.log(res);
 				alert('성공적으로 수정되었습니다.');
 				setFullName('');
-				//setDateOfBirth('');
-				birthRef.current.value = ''; //초기화 안됨..
+				// setDateOfBirth('');
+				birthRef.current.value = ''; // 초기화 안됨..
 				setPassword('');
 				setCurrentPassword('');
-				//Router.replace('/my_page');
+				// Router.replace('/my_page');
 			})
-			.catch((err) => alert(err.response.data.reason));
+			.catch(err => alert(err.response.data.reason));
 	}, [currentPassword, password]);
 
-	//회원 탈퇴
+	// 회원 탈퇴
 	const onDeleteUser = useCallback(async () => {
 		const userId = sessionStorage.getItem('userId');
 		const token = sessionStorage.getItem('token');
@@ -110,21 +107,21 @@ const MyPage = () => {
 		await axios
 			.delete(`/api/auth/${userId}`, {
 				headers: {
-                    Authorization: `Bearer ${token}`,
-                    password: currentPassword
-                },
+					Authorization: `Bearer ${token}`,
+					password: currentPassword,
+				},
 			})
-			.then((res) => {
+			.then(() => {
 				alert('성공적으로 회원 탈퇴 되었습니다.');
 				sessionStorage.removeItem('userId');
 				sessionStorage.removeItem('token');
 				Router.replace('/');
 			})
-			.catch((err) => alert(err.response.data.reason));
+			.catch(err => alert(err.response.data.reason));
 	}, [currentPassword]);
 
-	//이미지 등록
-	const fileChange = (e) => {
+	// 이미지 등록
+	const fileChange = e => {
 		const userId = sessionStorage.getItem('userId');
 		const token = sessionStorage.getItem('token');
 
@@ -136,14 +133,14 @@ const MyPage = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(res => {
 				alert('성공적으로 등록되었습니다.');
 				setImageSrc(res.data.photo);
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
-	//팝업 띄우기 관련
+	// 팝업 띄우기 관련
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const showModal = () => {
 		setIsModalVisible(true);
@@ -155,10 +152,11 @@ const MyPage = () => {
 		setIsModalVisible(false);
 	};
 
-	//자신의 유언장을 전송, 생사여부를 변경 가능 권한을 주고싶은 사람 등록
+	// 자신의 유언장을 전송, 생사여부를 변경 가능 권한을 주고싶은 사람 등록
 	const addTruseUser = async () => {
 		const userId = sessionStorage.getItem('userId');
 		const token = sessionStorage.getItem('token');
+		// eslint-disable-next-line no-shadow
 		const currentPassword = confirmPassword;
 		await axios
 			.patch(
@@ -170,65 +168,53 @@ const MyPage = () => {
 					},
 				},
 			)
-			.then((res) => {
+			.then(() => {
 				alert('성공적으로 신뢰할 수 있는 사람을 등록했습니다.');
 				setIsModalVisible(false);
 			})
-			.catch((err) => alert(err.response.data.reason));
+			.catch(err => alert(err.response.data.reason));
 	};
 
-	const onChangeDateOfBirth = useCallback(
-		(date, dateString) => {
-			setDateOfBirth(dateString);
-		},
-		[],
-	);
+	const onChangeDateOfBirth = useCallback((date, dateString) => {
+		setDateOfBirth(dateString);
+	}, []);
 
-	const onChangeDeathDate = useCallback(
-		(date, dateString) => {
-			dateDeathString = dateString;
-		},
-		[],
-	);
+	const onChangeDeathDate = useCallback((date, dateString) => {
+		dateDeathString = dateString;
+	}, []);
 
-	const setDeathDate = useCallback(
-		(managedUserId) => {
-			confirm({
-				title: `사망일자를 입력해주세요.`, //${managedUserId}님의
-				icon: <ExclamationCircleOutlined />,
-				content: <DatePicker onChange={onChangeDeathDate} />,
+	const setDeathDate = useCallback(managedUserId => {
+		confirm({
+			title: `사망일자를 입력해주세요.`, // ${managedUserId}님의
+			icon: <ExclamationCircleOutlined />,
+			content: <DatePicker onChange={onChangeDeathDate} />,
 
-				onOk() {
-					changeLifeDeath(managedUserId);
-				},
+			onOk() {
+				changeLifeDeath(managedUserId);
+			},
 
-				onCancel() {},
-			});
-		},
-		[],
-	);
+			onCancel() { },
+		});
+	}, []);
 
-	const changeLifeDeath = useCallback(
-		(managedUserId) => {
-			const userId = sessionStorage.getItem('userId');
-			const token = sessionStorage.getItem('token');
-			axios
-				.post(
-					`/api/auth/${userId}/managedUsers/${managedUserId}`,
-					{ dateOfDeath: dateDeathString },
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
+	const changeLifeDeath = useCallback(managedUserId => {
+		const userId = sessionStorage.getItem('userId');
+		const token = sessionStorage.getItem('token');
+		axios
+			.post(
+				`/api/auth/${userId}/managedUsers/${managedUserId}`,
+				{ dateOfDeath: dateDeathString },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
 					},
-				)
-				.then((res) => {
-					alert('성공적으로 유언장을 발송했습니다.');
-				})
-				.catch((err) => alert(err.response.data.reason));
-		},
-		[],
-	);
+				},
+			)
+			.then(() => {
+				alert('성공적으로 유언장을 발송했습니다.');
+			})
+			.catch(err => alert(err.response.data.reason));
+	}, []);
 
 	return (
 		<AppLayout>
@@ -249,9 +235,6 @@ const MyPage = () => {
 						/>
 					</div>
 				</Wrapper>
-				{/* <div css={imageStyle}>
-					<Image src={imageSrc} alt="나의 영정 사진" layout="fill" />
-				</div> */}
 				<Frame>
 					<FrameImages>
 						<TbRectangleVertical className={'frame_svg'} />
@@ -259,21 +242,6 @@ const MyPage = () => {
 					</FrameImages>
 				</Frame>
 			</div>
-			{/* <div css={adBoxStyle}>
-				<div css={adContentStyle}>
-					<h2>추억할 영상 업로드</h2>
-					<p>유언장과 함께 추억을 전하세요</p>
-					<input type="file" name="file" />
-				</div>
-				<div css={imageStyle}>
-					<Image
-						src="https://images.unsplash.com/photo-1528752477378-485b46bedcde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzdGFtZW50fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60"
-						alt="추억할 영상"
-						layout="fill"
-					/>
-				</div>
-			</div> */}
-
 			<div css={mainWrapper}>
 				<section css={sectionWrapper}>
 					<Wrapper>
@@ -289,12 +257,12 @@ const MyPage = () => {
 										onChange={onChangeFullName}
 										required
 									/>
-									<DatePicker 
+									<DatePicker
 										placeholder="생년월일"
 										name="dateOfBirth"
 										onChange={onChangeDateOfBirth}
-										ref={birthRef} 
-										required	
+										ref={birthRef}
+										required
 									/>
 									<input
 										type="password"
@@ -325,12 +293,6 @@ const MyPage = () => {
 						</div>
 					</Wrapper>
 				</section>
-				{/* <section css={sectionWrapper}>
-					<h2>
-						자신의 추모 공개 여부
-						<Switch defaultChecked onChange={onChange} />
-					</h2>
-				</section> */}
 			</div>
 			<div css={mainWrapper}>
 				<section>
@@ -400,8 +362,8 @@ const MyPage = () => {
 							<h1>내가 생사여부 변경 권한이 있는 사용자 목록</h1>
 							{managedUsers && (
 								<div style={{ left: '40%', marginTop: '2em' }}>
-									{managedUsers.map((user, index) => {
-										return (
+									{managedUsers.map(
+										(user, index) =>
 											user.confirmed && (
 												<div key={index}>
 													{user.email}
@@ -418,9 +380,8 @@ const MyPage = () => {
 														생사여부 변경
 													</Button>
 												</div>
-											)
-										);
-									})}
+											),
+									)}
 								</div>
 							)}
 							{!managedUsers && (
@@ -470,19 +431,18 @@ const sectionWrapper = css`
 `;
 
 const inputWrapper = css`
-    display: flex;
-    flex-direction: column;
-    width: 20em;
-    line-height: 3rem;
+	display: flex;
+	flex-direction: column;
+	width: 20em;
+	line-height: 3rem;
 
-    & > input {
-        background: transparent;
-        border: none;
-        border-bottom: solid 1px #193441;
-        line-height: 1.5rem;
-        margin: 10px 0;
-        
-    }
+	& > input {
+		background: transparent;
+		border: none;
+		border-bottom: solid 1px #193441;
+		line-height: 1.5rem;
+		margin: 10px 0;
+	}
 `;
 
 const adBoxStyle = css`
@@ -503,13 +463,6 @@ const adContentStyle = css`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-`;
-
-const imageStyle = css`
-	position: relative;
-	width: 50%;
-	line-height: 10rem;
-	background-color: silver;
 `;
 
 const buttonWrapper = css`

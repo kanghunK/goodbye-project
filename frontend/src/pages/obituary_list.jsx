@@ -1,42 +1,39 @@
-import { AppLayout } from '../components';
-import Image from 'next/image';
+import React from 'react';
 import Link from 'next/link';
 import { css } from '@emotion/react';
-import { Pagination, Empty } from 'antd';
+import { Empty } from 'antd';
+import AppLayout from '../components/AppLayout';
 import 'antd/dist/antd.css';
-import { Button } from './../util/common_styles';
+import { Button } from "../util/common_styles";
 // import chrysanthemum from '/images/chrysanthemum.jpg';
 
-const ObituaryList = () => {
-	return (
-		<AppLayout>
-			<div css={titleImageStyle}>
-				<p>부고 리스트</p>
-			</div>
-			<div css={listWrapper}>
-				<Empty
-					image={Empty.PRESENTED_IMAGE_SIMPLE}
-					imageStyle={{
-						height: 60,
-					}}
-					description={
-						<span>
-							부고 내역이 없습니다. 간편하게 작성하고
-							공유해보세요.
-						</span>
-					}
-				>
-					<Link href={'/obituary_detail'}>
-						<Button type="primary" style={{ marginTop: '2em' }}>
-							작성하기
-						</Button>
-					</Link>
-				</Empty>
-			</div>
-			{/* <Pagination defaultCurrent={1} total={50} /> */}
-		</AppLayout>
-	);
-};
+const ObituaryList = () =>
+	<AppLayout>
+		<div css={titleImageStyle}>
+			<p>부고 리스트</p>
+		</div>
+		<div css={listWrapper}>
+			<Empty
+				image={Empty.PRESENTED_IMAGE_SIMPLE}
+				imageStyle={{
+					height: 60,
+				}}
+				description={
+					<span>
+						부고 내역이 없습니다. 간편하게 작성하고
+						공유해보세요.
+					</span>
+				}
+			>
+				<Link href={'/obituary_detail'}>
+					<Button type="primary" style={{ marginTop: '2em' }}>
+						작성하기
+					</Button>
+				</Link>
+			</Empty>
+		</div>
+		{/* <Pagination defaultCurrent={1} total={50} /> */}
+	</AppLayout>
 
 export default ObituaryList;
 

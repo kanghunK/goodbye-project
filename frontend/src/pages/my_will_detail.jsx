@@ -18,7 +18,7 @@ const MyWillDetail = () => {
 	const router = useRouter();
 	const [editForm, setEditForm] = useState(false);
 	//const { willList } = useSelector((state) => state.will);
-	const { logInState } = useSelector((state) => state.user);
+	const { logInState } = useSelector(state => state.user);
 
 	const [title, onChangeTitle, setTitle] = useInput('');
 	const [content, onChangeContent, setContent] = useInput('');
@@ -50,7 +50,7 @@ const MyWillDetail = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(res => {
 				// dispatch(RECEIVERACTIONS.getReceivers({ lists: res.data }));
 				console.log(res.data.length);
 				setReceiverData([...res.data]);
@@ -59,7 +59,7 @@ const MyWillDetail = () => {
 					Router.replace('/receiver_management_page');
 				}
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
 	//API 사용을 위한 공통 데이터
@@ -84,7 +84,7 @@ const MyWillDetail = () => {
 
 			axios
 				.get(url, headerAuth)
-				.then((res) => {
+				.then(res => {
 					//console.log(res.data);
 					const { title, content, receivers, _id } = res.data;
 					setTitle(title);
@@ -93,23 +93,23 @@ const MyWillDetail = () => {
 					setWillId(_id);
 
 					let receivers_forShow = '';
-					receivers.map((item) => {
+					receivers.map(item => {
 						const receiverId = item.receiverId;
 						axios
 							.get(
 								`/api/auth/${userId}/receivers/${receiverId}`,
 								headerAuth,
 							)
-							.then((res) => {
+							.then(res => {
 								receivers_forShow += `${res.data.fullName}(${res.data.relation}) <${res.data.emailAddress}>, `;
 							})
-							.catch((err) => console.log(err))
+							.catch(err => console.log(err))
 							.finally(() =>
 								setReceivers(receivers_forShow.slice(0, -2)),
 							);
 					});
 				})
-				.catch((err) => alert(err.response.data.reason));
+				.catch(err => alert(err.response.data.reason));
 		}
 	};
 
@@ -138,14 +138,14 @@ const MyWillDetail = () => {
 				alert('성공적으로 유언장이 등록되었습니다.');
 				Router.replace('/my_will');
 			})
-			.catch((err) => alert(err.response.data.reason));
+			.catch(err => alert(err.response.data.reason));
 	});
 
-	const onChangeCheckBox = useCallback((e) => {
+	const onChangeCheckBox = useCallback(e => {
 		const index = e.target.index;
 
 		if (checkedIndex.indexOf(index) > -1) {
-			checkedIndex = checkedIndex.filter((item) => item != index);
+			checkedIndex = checkedIndex.filter(item => item != index);
 		} else {
 			checkedIndex.push(index);
 		}
@@ -153,7 +153,7 @@ const MyWillDetail = () => {
 
 	// 수신인 선택완료 클릭
 	const onOkReceiverList = useCallback(
-		(e) => {
+		e => {
 			let receivers_forShow = '';
 			let receivers_forSend = [];
 
@@ -187,7 +187,7 @@ const MyWillDetail = () => {
 				setEditForm(false);
 				Router.replace('/my_will');
 			})
-			.catch((err) => alert(err.response.data.reason));
+			.catch(err => alert(err.response.data.reason));
 	});
 
 	//유언장 삭제
@@ -201,7 +201,7 @@ const MyWillDetail = () => {
 				alert('성공적으로 유언장이 삭제되었습니다.');
 				Router.replace('/my_will');
 			})
-			.catch((err) => alert(err.response.data.reason));
+			.catch(err => alert(err.response.data.reason));
 	});
 
 	//유언장 수정 가능하게 수정
@@ -399,8 +399,7 @@ const HeaderWrapper = styled.div`
 		font-size: 1.3rem;
 		background: transparent;
 		border: none;
-		border-bottom: ${(props) =>
-			props.read ? 'none' : 'solid 1px #193441'};
+		border-bottom: ${props => (props.read ? 'none' : 'solid 1px #193441')};
 		:focus {
 			outline: none;
 		}

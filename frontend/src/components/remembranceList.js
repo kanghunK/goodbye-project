@@ -1,68 +1,68 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { Card } from 'antd';
 import 'antd/dist/antd.css';
 
 const RemembranceList = () => {
-    const [currentRB, setCurrentRB] = useState([]);
+	const [currentRB, setCurrentRB] = useState([]);
 
+	const getRecentRBData = async () => {
+		try {
+			const res = await axios.get(`/api/remembrances/recent?count=6`);
+			setCurrentRB([...res.data]);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-    const getRecentRBData = async () => {
-      try {
-        const res = await axios.get(`/api/remembrances/recent?count=6`);
-        setCurrentRB([...res.data])
-      } catch (error) {
-        console.log(error);
-      }
-      
-    } 
-    
-    useEffect(() => {
-        getRecentRBData();
-    }, [])
+	useEffect(() => {
+		getRecentRBData();
+	}, []);
 
-    return (
-            <BoxStyle>
-				<div css={currentProgress}>
-					<h1>현재 진행중인 추모식</h1>
-					<p>진행중인 추모</p>
-					<div css={CardGroup}>
-						{currentRB.map((death, i) => {
-							return (
-								death.dateOfDeath && (
-									<div
-										key={`${death._id} + ${i}`}
-										css={progessCard}
+	return (
+		<BoxStyle>
+			<div css={currentProgress}>
+				<h1>현재 진행중인 추모식</h1>
+				<p>진행중인 추모</p>
+				<div css={CardGroup}>
+					{currentRB.map(
+						(death, i) =>
+							death.dateOfDeath && (
+								<div
+									key={`${death._id} + ${i}`}
+									css={progessCard}
+								>
+									<a
+										href={`http://kdt-sw2-seoul-team11.elicecoding.com/remembrance?remembranceId=${death._id}`}
 									>
-										<a
-											href={`http://kdt-sw2-seoul-team11.elicecoding.com/remembrance?remembranceId=${death._id}`}
+										<Card
+											title={death.fullName}
+											bordered={true}
 										>
-											<Card
-												title={death.fullName}
-												bordered={true}
-											>
-												<p>{`${death.dateOfBirth} \n~`}</p>
-												<p>{`${death.dateOfDeath}`}</p>
-											</Card>
-										</a>
-									</div>
-								)
-							);
-						})}
-					</div>
+											<p>{`${death.dateOfBirth} \n~`}</p>
+											<p>{`${death.dateOfDeath}`}</p>
+										</Card>
+									</a>
+								</div>
+							),
+					)}
 				</div>
-			</BoxStyle>
-    )
-}
+			</div>
+		</BoxStyle>
+	);
+};
 
-export {RemembranceList};
+export default RemembranceList;
 
 const BoxStyle = styled.div`
 	width: 100%;
-	//height: 100vh;
 	margin-bottom: 10rem;
 	padding: 2rem;
 `;

@@ -2,8 +2,6 @@ import React, {
 	useEffect,
 	useState,
 	useCallback,
-	useMemo,
-	useRef,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -15,12 +13,10 @@ import styled from '@emotion/styled';
 import { Card } from 'antd';
 import 'antd/dist/antd.css';
 
+import AppLayout from '../components/AppLayout';
+import Pagination from '../components/Pagination';
+import ReceiverList from '../components/ReceiverList';
 
-import {
-	AppLayout,
-	Pagination,
-	ReceiverList
-} from '../components';
 import { Button } from '../util/common_styles';
 import { WillACTIONS } from '../reducers/will';
 import { RECEIVERACTIONS } from '../reducers/receivers';
@@ -32,10 +28,8 @@ import { RECEIVERACTIONS } from '../reducers/receivers';
 
 const MyWill = () => {
 	const dispatch = useDispatch();
-	const willList = useSelector((state) => {
-		return state.will.willList;
-	});
-	const { logInState } = useSelector((state) => state.user);
+	const willList = useSelector(state => state.will.willList);
+	const { logInState } = useSelector(state => state.user);
 	const [currentPage, setCurrentPage] = useState(1);
 	const clickPagination = useCallback(setCurrentPage, []);
 
@@ -52,10 +46,9 @@ const MyWill = () => {
 		loadValues();
 	}, [logInState]);
 
-
 	const pageListUpdate = () => {
 		// 마지막 페이지를 삭제 했다면 현재 페이지 번호 앞으로 이동
-		setCurrentPage((currentPageNum) => {
+		setCurrentPage(currentPageNum => {
 			const updatePageNum =
 				willList[currentPageNum - 1] === undefined
 					? currentPageNum - 2
@@ -74,10 +67,10 @@ const MyWill = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(res => {
 				dispatch(RECEIVERACTIONS.getReceivers({ lists: res.data }));
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
 	const getWillsList = () => {
@@ -89,19 +82,20 @@ const MyWill = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			.then((res) => {
+			.then(res => {
 				dispatch(WillACTIONS.getWills({ lists: res.data }));
 				pageListUpdate();
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
-	const onClickDelete = (will) => {
+	const onClickDelete = will => {
 		const token = sessionStorage.getItem('token');
 		const userId = sessionStorage.getItem('userId');
 
 		window.confirm('정말 제거하시겠습니까?');
 		axios
+			// eslint-disable-next-line no-underscore-dangle
 			.delete(`/api/auth/${userId}/wills/${will._id}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -110,7 +104,7 @@ const MyWill = () => {
 			.then(() => {
 				getWillsList();
 			})
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	};
 
 	return (
@@ -156,39 +150,40 @@ const MyWill = () => {
 						<CardGroup>
 							{willList.length > 0
 								? willList[currentPage - 1].map((will, i) => (
-										<Card
-											title={will.title}
-											extra={
-												<CardBtnGroup>
-													<Link
-														href={{
-															pathname:
-																'/my_will_detail',
-															query: `willId=${will._id}`,
-														}}
-													>
-														<a css={aTagStyle}>
-															유언장 상세보기
-														</a>
-													</Link>
-													<Button
-														type="button"
-														onClick={() =>
-															onClickDelete(will)
-														}
-													>
-														유언장 제거하기
-													</Button>
-												</CardBtnGroup>
-											}
-											style={{
-												width: '20rem',
-											}}
-											key={`card-${i}`}
-										>
-											<ReceiverList will={will} />
-										</Card>
-								  ))
+									<Card
+										title={will.title}
+										extra={
+											<CardBtnGroup>
+												<Link
+													href={{
+														pathname:
+															'/my_will_detail',
+														// eslint-disable-next-line no-underscore-dangle
+														query: `willId=${will._id}`,
+													}}
+												>
+													<a css={aTagStyle}>
+														유언장 상세보기
+													</a>
+												</Link>
+												<Button
+													type="button"
+													onClick={() =>
+														onClickDelete(will)
+													}
+												>
+													유언장 제거하기
+												</Button>
+											</CardBtnGroup>
+										}
+										style={{
+											width: '20rem',
+										}}
+										key={`card-${i}`}
+									>
+										<ReceiverList will={will} />
+									</Card>
+								))
 								: '유언장 정보가 없습니다..'}
 						</CardGroup>
 						<Pagination
@@ -260,17 +255,16 @@ const NoticeBtnGroup = styled.div`
 	}
 `;
 
-
 const CardGroup = styled.div`
 	display: grid;
 	grid-template-columns: repeat(3, 20rem);
 	grid-row-gap: 3rem;
 	grid-column-gap: 3rem;
 	justify-content: center;
-	
-    & > div {
+
+	& > div {
 		border-radius: 20px;
-		border: 1px solid darkslategray;	
+		border: 1px solid darkslategray;
 	}
 
 	@media (max-width: 70rem) {
