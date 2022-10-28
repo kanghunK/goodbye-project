@@ -1,23 +1,28 @@
 import React from "react";
 import Link from 'next/link';
 import styled from "@emotion/styled";
+import { CgFileDocument } from 'react-icons/cg';
+import { RiUserReceived2Line } from 'react-icons/ri'
 
 const NavBar = () => {
 
     return (
         <Container>
-            <Link href={'/'}>
-                <h1>GoodBye</h1>
-            </Link>
             <ul>
                 <li>
                     <Link href={'/my_will'}>
-                        <a>유언장 작성/확인</a>
+                        <a>
+                            <CgFileDocument />
+                            <span>유언장 관리</span>
+                        </a>
                     </Link>
                 </li>
                 <li>
                     <Link href={'/receiver_management_page'}>
-                        <a>수신인 관리</a>
+                        <a>
+                            <RiUserReceived2Line />
+                            <span>수신인 관리</span>
+                        </a>
                     </Link>
                 </li>
             </ul>
@@ -32,30 +37,39 @@ const Container = styled.div`
     display: flex;
     height: 100%;
     align-items: center;
+    gap: 2.5rem;
 
 	ul {
-        display: inline-block;
+        display: flex;
         margin: 0;
-	}
-
-	ul a {
-		text-decoration: none;
+        padding: 0;
+        gap: 2rem;
 	}
 
 	ul li {
 		list-style: none;
 		float: left;
-		width: 130px;
 		text-align: center;
 		a {
 			display: block;
+            text-decoration: none;
 			width: 100%;
 			height: 100%;
-			color: #193441;
+            border-radius: 5px;
+			color: #47443e;
+            svg {
+                display: block;
+                margin: 0 auto 3px;
+                width: 30px;
+                height: auto;
+            }
+            span {
+                display: block;
+            }
 		}
 		a:hover {
-			color: #fcfff5;
-			background-color: #3e606f;
+			// color: #fcfff5;
+			background-color: #d6d6d6;
 		}
 	}
 `;

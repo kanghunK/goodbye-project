@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { USERACTIONS } from '../reducers/user';
 
 import NavBar from './NavBar';
-// import { Button } from '../util/common_styles';
 import userLoginCheck from '../util/userLoginCheck';
 
 const Header = () => {
@@ -34,9 +33,13 @@ const Header = () => {
 	return (
 		<>
 			<Wrapper>
+				<Link href={'/'}>
+					<h1>GoodBye</h1>
+				</Link>
 				<GroupBox>
 					<NavBar />
 					{!logInState ? (
+
 						<LogInButtonGroup>
 							<Link href={'/sign_in'}>
 								<Button role="button">로그인</Button>
@@ -64,9 +67,21 @@ const Header = () => {
 export default Header;
 
 const Wrapper = styled.header`
+// width: 1200px;
+	display: flex;
+	align-items: center;
+	gap: 5rem;
+	position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+	padding: 20px 40px;
+	box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
+	// border-bottom: 0.5px solid black;
 	h1 {
-		display: inline-block;
-		margin: 0 0 0 6rem;
+		margin: 0;
 		text-align: center;
 		font-size: 1.5em;
 		font-weight: bold;
@@ -77,22 +92,14 @@ const Wrapper = styled.header`
 `;
 
 const GroupBox = styled.div`
-	height: 80px;
 	display: flex;
-    flex-direction: row;
+	flex-grow: 1;
     justify-content: space-between;
     align-items: center;
 `;
 
 const LogInButtonGroup = styled.div`
-	height: 100%;
-	margin-right: 4rem;
-	a {
-		position: relative;
-		top: 50%;
-		transform: translateY(-50%);
-	}
-	
+	display: flex;
 	& a:first-of-type {
 		margin-right: 25px;
 	}

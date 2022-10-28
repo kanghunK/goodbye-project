@@ -93,7 +93,7 @@ const adBoxStyle = css`
 	display: flex;
 	width: 100%;
 	height: 100vh;
-	margin: 10rem 0;
+	// margin: 10rem 0;
 	padding: 2rem;
 	align-item: center;
 	justify-content: space-evenly;
