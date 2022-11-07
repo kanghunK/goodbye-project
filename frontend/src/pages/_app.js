@@ -4,7 +4,7 @@ import Router from 'next/router';
 import Head from 'next/head';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import wrapper from '../store/configureStore';
 
@@ -43,8 +43,8 @@ const MyApp = ({ Component }) => {
 	);
 }
 
-MyApp.propTypes = {
-	Component: PropTypes.node.isRequired
-}
+// MyApp.propTypes = {
+// 	Component: PropTypes.node.isRequired
+// }
 
 export default wrapper.withRedux(MyApp);

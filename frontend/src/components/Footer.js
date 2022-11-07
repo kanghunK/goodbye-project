@@ -76,32 +76,9 @@ const FooterItems = styled.ul`
 		font-size: larger;
 	}
 `;
-// const FooterIcons = styled.div`
-// 	width: 15rem;
-// 	height: 2rem;
-// 	margin: auto;
-// 	display: flex;
-// 	justify-content: space-evenly;
-// 	align-items: center;
-// 	& > * {
-// 		font-size: 1.5rem;
-// 	}
-// `;
-// const FacebookIcon = styled.a`
-// 	color: #4968ad;
-// `;
-// const InstagramIcon = styled.a`
-// 	color: black;
-// `;
-// const TwitterIcon = styled.a`
-// 	color: #49a1eb;
-// `;
-// const KakaoIcon = styled.a`
-// 	color: #fcd411;
-// `;
 
-const Wrapper = styled.div`
-	position: absolute;
+const Wrapper = styled.footer`
+	// position: absolute;
 	width: 100%;
 	bottom: 0;
 `;

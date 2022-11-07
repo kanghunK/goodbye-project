@@ -30,7 +30,7 @@ const Wrapper = styled.div`
 	z-index: 2;
 	min-height: 100vh;
 	position: relative;
-	padding-bottom: 200px;
+	// padding-bottom: 200px;
 	font-family: 'Noto Sans KR', sans-serif;
 	background-color: #fff;
 `;

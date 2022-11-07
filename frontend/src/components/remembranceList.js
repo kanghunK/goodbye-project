@@ -27,50 +27,52 @@ const RemembranceList = () => {
 	}, []);
 
 	return (
-		<BoxStyle>
-			<div css={currentProgress}>
+		<RbListBox>
+			<RbListTitle>
 				<h1>현재 진행중인 추모식</h1>
-				<p>진행중인 추모</p>
-				<div css={CardGroup}>
-					{currentRB.map(
-						(death, i) =>
-							death.dateOfDeath && (
-								<div
-									key={`${death._id} + ${i}`}
-									css={progessCard}
+				{/* <p>진행중인 추모</p> */}
+			</RbListTitle>
+			<div css={CardGroup}>
+				{currentRB.map(
+					(death, i) =>
+						death.dateOfDeath && (
+							<div
+								key={`${death._id} + ${i}`}
+								css={progessCard}
+							>
+								<a
+									href={`http://kdt-sw2-seoul-team11.elicecoding.com/remembrance?remembranceId=${death._id}`}
 								>
-									<a
-										href={`http://kdt-sw2-seoul-team11.elicecoding.com/remembrance?remembranceId=${death._id}`}
+									<Card
+										title={death.fullName}
+										bordered={true}
 									>
-										<Card
-											title={death.fullName}
-											bordered={true}
-										>
-											<p>{`${death.dateOfBirth} \n~`}</p>
-											<p>{`${death.dateOfDeath}`}</p>
-										</Card>
-									</a>
-								</div>
-							),
-					)}
-				</div>
+										<p>{`${death.dateOfBirth} \n~`}</p>
+										<p>{`${death.dateOfDeath}`}</p>
+									</Card>
+								</a>
+							</div>
+						),
+				)}
 			</div>
-		</BoxStyle>
+		</RbListBox>
 	);
 };
 
 export default RemembranceList;
 
-const BoxStyle = styled.div`
+const RbListBox = styled.section`
 	width: 100%;
-	margin-bottom: 10rem;
-	padding: 2rem;
+	height: 600px;
+	text-align: center;
+	min-height: calc(100vh - 95px);
+	overflow: hidden;
 `;
 
-const currentProgress = css`
-	width: 100%;
-	text-align: center;
-`;
+const RbListTitle = styled.div`
+	display: inline-block;
+	font-size: 30px;
+`
 
 const progessCard = css`
 	width: 10rem;

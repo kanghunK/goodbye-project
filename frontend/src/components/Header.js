@@ -1,6 +1,7 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
+import dynamic from 'next/dynamic'
 
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,11 +13,31 @@ import userLoginCheck from '../util/userLoginCheck';
 const Header = () => {
 	const dispatch = useDispatch();
 	const { logInState } = useSelector(state => state.user);
+	const [fixHeader, setFixHeader] = useState(false);
+	const height = useRef(null);
 
 	// 로그인 확인 부분
 	useEffect(() => {
 		setLoginValue();
 	}, []);
+
+	// 스크롤이 헤더부분 밑으로 내려가면 헤더의 position: fixed로 만듬
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		}
+	}, [])
+
+	const handleScroll = useCallback(() => {
+		const headerHeight = height.current.clientHeight;
+		// console.log(window.pageYOffset);
+		if (window.pageYOffset >= headerHeight) {
+			setFixHeader(true);
+		} else {
+			setFixHeader(false);
+		}
+	}, [])
 
 	const setLoginValue = async () => {
 		const checkValue = await userLoginCheck();
@@ -32,7 +53,7 @@ const Header = () => {
 
 	return (
 		<>
-			<Wrapper>
+			<Wrapper ref={height} fixHeader={fixHeader}>
 				<Link href={'/'}>
 					<h1>GoodBye</h1>
 				</Link>
@@ -67,11 +88,10 @@ const Header = () => {
 export default Header;
 
 const Wrapper = styled.header`
-// width: 1200px;
 	display: flex;
 	align-items: center;
 	gap: 5rem;
-	position: fixed;
+	position: ${({ fixHeader }) => (fixHeader ? 'fixed' : 'relative')};
     z-index: 100;
     top: 0;
     left: 0;
@@ -79,7 +99,6 @@ const Wrapper = styled.header`
     background-color: white;
 	padding: 20px 40px;
 	box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
-	// border-bottom: 0.5px solid black;
 	h1 {
 		margin: 0;
 		text-align: center;
