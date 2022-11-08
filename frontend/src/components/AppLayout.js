@@ -15,7 +15,7 @@ const AppLayout = ({ children }) => {
 			<Header />
 			{children}
 			<Footer />
-			<Cursor left={left} top={top} />
+			{/* <Cursor left={left} top={top} /> */}
 		</Wrapper>
 	);
 };

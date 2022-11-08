@@ -44,7 +44,7 @@ const Main = styled.main``;
 const WillBox = styled.section`
 	display: flex;
 	width: 100%;
-	height: 600px;
+	height: 650px;
 	// min-height: calc(100vh - 95px);
 	justify-content: space-evenly;
 	align-items: center;
@@ -76,7 +76,7 @@ const WillImg = styled.div`
 
 const RbBox = styled.section`
 	display: flex;
-	height: 600px;
+	height: 650px;
 	min-height: calc(100vh - 95px);
 	flex-direction: row-reverse;
 	justify-content: space-evenly;

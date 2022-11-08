@@ -30,7 +30,6 @@ const RemembranceList = () => {
 		<RbListBox>
 			<RbListTitle>
 				<h1>현재 진행중인 추모식</h1>
-				{/* <p>진행중인 추모</p> */}
 			</RbListTitle>
 			<div css={CardGroup}>
 				{currentRB.map(
@@ -63,7 +62,7 @@ export default RemembranceList;
 
 const RbListBox = styled.section`
 	width: 100%;
-	height: 600px;
+	height: 650px;
 	text-align: center;
 	min-height: calc(100vh - 95px);
 	overflow: hidden;
@@ -71,7 +70,10 @@ const RbListBox = styled.section`
 
 const RbListTitle = styled.div`
 	display: inline-block;
-	font-size: 30px;
+	h1 {
+		margin: 0;
+		font-size: 30px;
+	}
 `
 
 const progessCard = css`
